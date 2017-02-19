@@ -35,7 +35,7 @@ public class Response {
 
     public Response appendCORSHeaders() {
         this.appendHeader("Access-Control-Allow-Origin: *")
-            .appendHeader("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS")
+            .appendHeader("Access-Control-Allow-Methods: GET, POST, OPTIONS")
             .appendHeader("Access-Control-Allow-Headers: Content-Type, Authorization, Content-Length, X-Requested-With");
         return this;
     }
