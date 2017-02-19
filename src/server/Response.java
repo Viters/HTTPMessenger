@@ -4,54 +4,58 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Response {
+    private static String RESPONSE_SEPARATOR = "\r\n";
     private List<String> headers;
     private String body;
 
     public String make() {
-        String headers = formatHeaders();
-        return headers + body;
+        String formattedResponse = getFormattedHeaders();
+        if (body != null) {
+            // Response body should be isolated with one line from headers
+            formattedResponse += RESPONSE_SEPARATOR + body;
+        }
+        return formattedResponse;
     }
 
     public Response() {
         headers = new ArrayList<>();
     }
 
-    public Response appendHeader(String header) {
+    public Response appendHeaderAndReturnSelf(String header) {
         headers.add(header);
         return this;
     }
 
     public Response appendStatus(String status) {
-        return appendHeader("HTTP/1.1 " + status);
+        return appendHeaderAndReturnSelf("HTTP/1.1 " + status);
     }
 
     public Response appendConnection(String connection) {
-        return appendHeader("Connection: " + connection);
+        return appendHeaderAndReturnSelf("Connection: " + connection);
     }
 
     public Response appendContentType(String contentType) {
-        return appendHeader("Content-Type: " + contentType);
+        return appendHeaderAndReturnSelf("Content-Type: " + contentType);
     }
 
     public Response appendCORSHeaders() {
-        this.appendHeader("Access-Control-Allow-Origin: *")
-            .appendHeader("Access-Control-Allow-Methods: GET, POST, OPTIONS")
-            .appendHeader("Access-Control-Allow-Headers: Content-Type, Authorization, Content-Length, X-Requested-With");
+        this.appendHeaderAndReturnSelf("Access-Control-Allow-Origin: *")
+                .appendHeaderAndReturnSelf("Access-Control-Allow-Methods: GET, POST, OPTIONS")
+                .appendHeaderAndReturnSelf("Access-Control-Allow-Headers: Content-Type, Authorization, Content-Length, X-Requested-With");
         return this;
     }
 
-    public Response appendBody(String body) {
+    public Response appendBodyAndReturnSelf(String body) {
         this.body = body;
         return this;
     }
 
-    private String formatHeaders() {
-        String header = "";
-        for (String s : headers) {
-            header += s + "\r\n";
+    private String getFormattedHeaders() {
+        String preparedHeaders = "";
+        for (String singleHeaderTag : this.headers) {
+            preparedHeaders += singleHeaderTag + RESPONSE_SEPARATOR;
         }
-        header += "\r\n";
-        return header;
+        return preparedHeaders;
     }
 
     @Override

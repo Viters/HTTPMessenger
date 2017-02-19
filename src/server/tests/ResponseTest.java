@@ -9,7 +9,7 @@ class ResponseTest {
         // given
         Response response = new Response();
         response.appendConnection("close")
-                .appendBody("Hello!");
+                .appendBodyAndReturnSelf("Hello!");
 
         // when
         String responseToBeSent = response.make();

@@ -28,29 +28,29 @@ public class ResponseFactory {
         return new Response()
                 .appendStatus(RESPONSE_STATUS_NOT_FOUND)
                 .appendContentType(RESPONSE_TYPE_HTML)
-                .appendBody("<h1>Not found</h1>");
+                .appendBodyAndReturnSelf("<h1>Not found</h1>");
     }
 
     public static Response json(List<?> body) {
         JSONArray jsonArray = new JSONArray(body);
         return createResponseWithJSONHeaders()
-                .appendBody(jsonArray.toString());
+                .appendBodyAndReturnSelf(jsonArray.toString());
     }
 
     public static Response json(JSONArray body) {
         return createResponseWithJSONHeaders()
-                .appendBody(body.toString());
+                .appendBodyAndReturnSelf(body.toString());
     }
 
     public static Response json(Map<?, ?> body) {
         JSONObject jsonObject = new JSONObject(body);
         return createResponseWithJSONHeaders()
-                .appendBody(jsonObject.toString());
+                .appendBodyAndReturnSelf(jsonObject.toString());
     }
 
     public static Response json(JSONObject body) {
         return createResponseWithJSONHeaders()
-                .appendBody(body.toString());
+                .appendBodyAndReturnSelf(body.toString());
     }
 
     private static Response createResponseWithJSONHeaders() {
