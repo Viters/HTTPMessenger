@@ -8,8 +8,8 @@ class ResponseTest {
     void formatResponseAsStringValidForSending() {
         // given
         Response response = new Response();
-        response.appendConnection("close")
-                .appendBody("Hello!");
+        response.appendConnectionAndReturnSelf("close")
+                .appendBodyAndReturnSelf("Hello!");
 
         // when
         String responseToBeSent = response.make();

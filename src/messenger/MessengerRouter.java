@@ -10,7 +10,7 @@ public class MessengerRouter extends Router {
     public Response getRoute(Request request) {
         switch(request.getUrl()) {
             case "/":
-                return ResponseFactory.ok().appendBody("<h1>Hello!</h1>");
+                return ResponseFactory.ok().appendBodyAndReturnSelf("<h1>Hello!</h1>");
             case "/messages":
                 return MessengerController.fetchNewMessagesForUser(request);
             case "/users":

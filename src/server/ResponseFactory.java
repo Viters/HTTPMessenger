@@ -14,49 +14,49 @@ public class ResponseFactory {
 
     public static Response allowCORS() {
         return new Response()
-                .appendStatus(RESPONSE_STATUS_OK)
-                .appendCORSHeaders();
+                .appendStatusAndReturnSelf(RESPONSE_STATUS_OK)
+                .appendCORSHeadersAndReturnSelf();
     }
 
     public static Response ok() {
         return new Response()
-                .appendStatus(RESPONSE_STATUS_OK)
-                .appendContentType(RESPONSE_TYPE_HTML);
+                .appendStatusAndReturnSelf(RESPONSE_STATUS_OK)
+                .appendContentTypeAndReturnSelf(RESPONSE_TYPE_HTML);
     }
 
     public static Response notFound() {
         return new Response()
-                .appendStatus(RESPONSE_STATUS_NOT_FOUND)
-                .appendContentType(RESPONSE_TYPE_HTML)
-                .appendBody("<h1>Not found</h1>");
+                .appendStatusAndReturnSelf(RESPONSE_STATUS_NOT_FOUND)
+                .appendContentTypeAndReturnSelf(RESPONSE_TYPE_HTML)
+                .appendBodyAndReturnSelf("<h1>Not found</h1>");
     }
 
     public static Response json(List<?> body) {
         JSONArray jsonArray = new JSONArray(body);
         return createResponseWithJSONHeaders()
-                .appendBody(jsonArray.toString());
+                .appendBodyAndReturnSelf(jsonArray.toString());
     }
 
     public static Response json(JSONArray body) {
         return createResponseWithJSONHeaders()
-                .appendBody(body.toString());
+                .appendBodyAndReturnSelf(body.toString());
     }
 
     public static Response json(Map<?, ?> body) {
         JSONObject jsonObject = new JSONObject(body);
         return createResponseWithJSONHeaders()
-                .appendBody(jsonObject.toString());
+                .appendBodyAndReturnSelf(jsonObject.toString());
     }
 
     public static Response json(JSONObject body) {
         return createResponseWithJSONHeaders()
-                .appendBody(body.toString());
+                .appendBodyAndReturnSelf(body.toString());
     }
 
     private static Response createResponseWithJSONHeaders() {
         return new Response()
-                .appendStatus(RESPONSE_STATUS_OK)
-                .appendContentType(RESPONSE_TYPE_JSON)
-                .appendCORSHeaders();
+                .appendStatusAndReturnSelf(RESPONSE_STATUS_OK)
+                .appendContentTypeAndReturnSelf(RESPONSE_TYPE_JSON)
+                .appendCORSHeadersAndReturnSelf();
     }
 }
