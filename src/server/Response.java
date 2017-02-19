@@ -8,11 +8,11 @@ import java.util.List;
  */
 public class Response {
     private List<String> headers;
-    private String data;
+    private String body;
 
     public String make() {
         String headers = formatHeaders();
-        return headers + data;
+        return headers + body;
     }
 
     public Response() {
@@ -44,12 +44,8 @@ public class Response {
     }
 
     public Response withData(String data) {
-        this.data = data;
+        this.body = data;
         return this;
-    }
-
-    public void setData(String data) {
-        this.data = data;
     }
 
     private String formatHeaders() {
@@ -65,7 +61,7 @@ public class Response {
     public String toString() {
         return "Response{" +
                 "headers=" + headers +
-                ", data='" + data + '\'' +
+                ", body='" + body + '\'' +
                 '}';
     }
 }
