@@ -6,9 +6,6 @@ import server.State;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-/**
- * Created by Viters on 16.01.2017.
- */
 public class MessengerState extends State {
     private ArrayList<User> users;
     private ArrayList<Message> messages;

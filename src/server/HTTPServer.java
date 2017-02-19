@@ -6,9 +6,6 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * Created by Viters on 10.01.2017.
- */
 public class HTTPServer {
     private ServerSocket serverSocket;
     private ExecutorService executorService;

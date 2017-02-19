@@ -8,9 +8,6 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by Viters on 10.01.2017.
- */
 public class Request {
     private String method;
     private String url;

@@ -5,9 +5,6 @@ import org.json.JSONObject;
 import java.util.Date;
 import java.util.HashMap;
 
-/**
- * Created by Viters on 11.01.2017.
- */
 public class User {
     private Integer id;
     private String name;

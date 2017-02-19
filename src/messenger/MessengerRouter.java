@@ -2,9 +2,6 @@ package messenger;
 
 import server.*;
 
-/**
- * Created by Viters on 15.01.2017.
- */
 public class MessengerRouter extends Router {
     @Override
     public Response getRoute(Request request) {

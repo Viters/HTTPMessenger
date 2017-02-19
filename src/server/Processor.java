@@ -3,9 +3,6 @@ package server;
 import java.io.*;
 import java.net.Socket;
 
-/**
- * Created by Viters on 10.01.2017.
- */
 public class Processor implements Runnable {
     private Socket client;
     private Router router;

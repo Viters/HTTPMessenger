@@ -7,9 +7,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
-/**
- * Created by Viters on 15.01.2017.
- */
 public class MessengerController extends Controller {
     private static MessengerState state = (MessengerState) HTTPServer.getState();
 
