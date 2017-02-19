@@ -1,5 +1,3 @@
-package server.tests;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
@@ -11,9 +9,6 @@ import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * Created by sir.viters on 19.02.2017.
- */
 class ResponseFactoryTest {
     @Test
     void allowCORSResponseContainsNeededData() {
@@ -147,5 +142,4 @@ class ResponseFactoryTest {
                 .contains("\"key1\":\"val1\"")
                 .contains("\"key2\":\"val2\"");
     }
-
 }
