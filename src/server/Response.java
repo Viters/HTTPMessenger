@@ -3,9 +3,6 @@ package server;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Viters on 10.01.2017.
- */
 public class Response {
     private List<String> headers;
     private String body;
@@ -43,8 +40,8 @@ public class Response {
         return this;
     }
 
-    public Response withData(String data) {
-        this.body = data;
+    public Response appendBody(String body) {
+        this.body = body;
         return this;
     }
 

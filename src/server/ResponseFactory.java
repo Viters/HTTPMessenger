@@ -6,72 +6,57 @@ import org.json.JSONObject;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Viters on 10.01.2017.
- */
 public class ResponseFactory {
     private static String RESPONSE_STATUS_OK = "200 OK";
     private static String RESPONSE_STATUS_NOT_FOUND = "404 Not Found";
     private static String RESPONSE_TYPE_HTML = "text/html";
     private static String RESPONSE_TYPE_JSON = "application/json";
 
-    public static Response AllowCORS() {
-        Response response = new Response();
-        response.appendStatus(RESPONSE_STATUS_OK)
+    public static Response allowCORS() {
+        return new Response()
+                .appendStatus(RESPONSE_STATUS_OK)
                 .appendCORSHeaders();
-        return response;
     }
 
-    public static Response OK() {
-        Response response = new Response();
-        response.appendStatus(RESPONSE_STATUS_OK)
+    public static Response ok() {
+        return new Response()
+                .appendStatus(RESPONSE_STATUS_OK)
                 .appendContentType(RESPONSE_TYPE_HTML);
-        return response;
     }
 
-    public static Response NotFound() {
-        Response response = new Response();
-        response.appendStatus(RESPONSE_STATUS_NOT_FOUND)
+    public static Response notFound() {
+        return new Response()
+                .appendStatus(RESPONSE_STATUS_NOT_FOUND)
                 .appendContentType(RESPONSE_TYPE_HTML)
-                .withData("<h1>Not found</h1>");
-        return response;
+                .appendBody("<h1>Not found</h1>");
     }
 
-    public static Response jsonResponse(List<?> data) {
-        Response response = new Response();
+    public static Response json(List<?> data) {
         JSONArray jsonArray = new JSONArray(data);
-        response.appendStatus(RESPONSE_STATUS_OK)
-                .appendContentType(RESPONSE_TYPE_JSON)
-                .appendCORSHeaders()
-                .withData(jsonArray.toString());
-        return response;
+        return createResponseWithJSONHeaders()
+                .appendBody(jsonArray.toString());
     }
 
-    public static Response jsonResponse(JSONArray data) {
-        Response response = new Response();
-        response.appendStatus(RESPONSE_STATUS_OK)
-                .appendContentType(RESPONSE_TYPE_JSON)
-                .appendCORSHeaders()
-                .withData(data.toString());
-        return response;
+    public static Response json(JSONArray data) {
+        return createResponseWithJSONHeaders()
+                .appendBody(data.toString());
     }
 
-    public static Response jsonResponse(Map<?, ?> data) {
-        Response response = new Response();
+    public static Response json(Map<?, ?> data) {
         JSONObject jsonObject = new JSONObject(data);
-        response.appendStatus(RESPONSE_STATUS_OK)
-                .appendContentType(RESPONSE_TYPE_JSON)
-                .appendCORSHeaders().
-                withData(jsonObject.toString());
-        return response;
+        return createResponseWithJSONHeaders()
+                .appendBody(jsonObject.toString());
     }
 
-    public static Response jsonResponse(JSONObject data) {
-        Response response = new Response();
-        response.appendStatus(RESPONSE_STATUS_OK)
+    public static Response json(JSONObject data) {
+        return createResponseWithJSONHeaders()
+                .appendBody(data.toString());
+    }
+
+    private static Response createResponseWithJSONHeaders() {
+        return new Response()
+                .appendStatus(RESPONSE_STATUS_OK)
                 .appendContentType(RESPONSE_TYPE_JSON)
-                .appendCORSHeaders()
-                .withData(data.toString());
-        return response;
+                .appendCORSHeaders();
     }
 }

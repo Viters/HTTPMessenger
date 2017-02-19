@@ -10,13 +10,13 @@ public class MessengerRouter extends Router {
     public Response getRoute(Request request) {
         switch(request.getUrl()) {
             case "/":
-                return ResponseFactory.OK().withData("<h1>Hello!</h1>");
+                return ResponseFactory.ok().appendBody("<h1>Hello!</h1>");
             case "/messages":
                 return MessengerController.fetchNewMessagesForUser(request);
             case "/users":
                 return MessengerController.fetchNewUsers(request);
             default:
-                return ResponseFactory.NotFound();
+                return ResponseFactory.notFound();
         }
     }
 
@@ -28,7 +28,7 @@ public class MessengerRouter extends Router {
             case "/message":
                 return MessengerController.createNewMessage(request);
             default:
-                return ResponseFactory.NotFound();
+                return ResponseFactory.notFound();
         }
     }
 }

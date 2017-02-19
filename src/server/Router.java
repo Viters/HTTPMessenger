@@ -1,8 +1,5 @@
 package server;
 
-/**
- * Created by Viters on 10.01.2017.
- */
 public abstract class Router {
     public Response route(Request request) {
         if (request.isGet()) {
@@ -12,7 +9,7 @@ public abstract class Router {
             return postRoute(request);
         }
         else if (request.isOption())
-            return ResponseFactory.AllowCORS();
+            return ResponseFactory.allowCORS();
 
         return null;
     }
