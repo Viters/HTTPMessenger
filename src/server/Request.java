@@ -12,15 +12,16 @@ public class Request {
     private String method;
     private String url;
     private Map<String, String> data;
-    private static Pattern varNamePattern;
-    private static Pattern contentLengthPattern;
+
+    private final static Pattern varNamePattern;
+    private final static Pattern contentLengthPattern;
 
     static {
         varNamePattern = Pattern.compile("(?<=name\\=\\\")(.+)(?=\\\")");
         contentLengthPattern = Pattern.compile("(?<=Content-Length\\: )([0-9]+)");
     }
 
-    public Request(BufferedReader request) throws IOException {
+    Request(BufferedReader request) throws IOException {
         data = new HashMap<>();
         parseRequest(request);
     }
@@ -35,15 +36,15 @@ public class Request {
         return data;
     }
 
-    public boolean isGet() {
+    boolean isGet() {
         return method.equalsIgnoreCase("GET");
     }
 
-    public boolean isPost() {
+    boolean isPost() {
         return method.equalsIgnoreCase("POST");
     }
 
-    public boolean isOption() {
+    boolean isOption() {
         return method.equalsIgnoreCase("OPTIONS");
     }
 
@@ -63,7 +64,7 @@ public class Request {
             query = firstLine.substring(5, (firstLine.lastIndexOf("HTTP/1.1")) - 1);
         }
 
-        if (this.isGet() == true) {
+        if (this.isGet()) {
             data = splitQuery(query);
             return;
         }
