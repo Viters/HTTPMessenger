@@ -16,7 +16,7 @@ class RequestTest {
     static {
         exampleGetRequest = "GET http://www.w3.org/pub/WWW/TheProject.html HTTP/1.1";
         examplePostRequest = "";
-        exampleOptionsRequest = "";
+        exampleOptionsRequest = "OPTIONS * HTTP/1.1";
     }
 
     @Test

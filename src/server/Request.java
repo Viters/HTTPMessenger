@@ -29,9 +29,11 @@ public class Request {
     public String getMethod() {
         return method;
     }
+
     public String getUrl() {
         return url;
     }
+
     public Map<String, String> getData() {
         return data;
     }
@@ -51,7 +53,7 @@ public class Request {
     private void parseRequest(BufferedReader request) throws IOException {
         String firstLine = request.readLine();
         String query = "";
-        method = firstLine.substring(0, firstLine.indexOf("/") - 1).trim();
+        method = parseMethod(firstLine);
 
         if (this.isOption()) {
             return;
@@ -59,8 +61,7 @@ public class Request {
 
         if (this.isGet()) {
             query = firstLine.substring(4, (firstLine.lastIndexOf("HTTP/1.1")) - 1);
-        }
-        else if (this.isPost()) {
+        } else if (this.isPost()) {
             query = firstLine.substring(5, (firstLine.lastIndexOf("HTTP/1.1")) - 1);
         }
 
@@ -103,6 +104,11 @@ public class Request {
                 this.data.put(name, value);
             }
         }
+    }
+
+    private String parseMethod(String requestFirstLine) {
+        // First line is specified to look like this "GET http://url HTTP/ver"
+        return requestFirstLine.substring(0, requestFirstLine.indexOf(" "));
     }
 
     private Map<String, String> splitQuery(String url) throws UnsupportedEncodingException {
