@@ -1,5 +1,6 @@
+package server;
+
 import org.junit.jupiter.api.Test;
-import server.Response;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

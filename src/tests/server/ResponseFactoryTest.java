@@ -1,8 +1,8 @@
+package server;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
-import server.Response;
-import server.ResponseFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
