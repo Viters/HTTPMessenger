@@ -116,8 +116,9 @@ public class Request {
 
     private Map<String, String> splitQuery(String url) throws UnsupportedEncodingException {
         Map<String, String> query_pairs = new HashMap<>();
-        ArrayList<String> pairs = new ArrayList<>(Arrays.asList(url.split("&")));
-        this.url = pairs.remove(0);
+        String[] querySplit = url.split("\\?");
+        ArrayList<String> pairs = new ArrayList<>(Arrays.asList(querySplit[1].split("&")));
+        this.url = querySplit[0];
         for (String pair : pairs) {
             int idx = pair.indexOf("=");
             query_pairs.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"), URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));

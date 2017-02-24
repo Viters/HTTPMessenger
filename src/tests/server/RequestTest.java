@@ -14,7 +14,7 @@ class RequestTest {
     private static final String exampleOptionsRequest;
 
     static {
-        exampleGetRequest = "GET http://www.w3.org/pub/WWW/TheProject.html?data=test HTTP/1.1";
+        exampleGetRequest = "GET http://www.w3.org/pub/WWW/TheProject.html?data=test&field=value HTTP/1.1";
         examplePostRequest =
                 "POST /user HTTP/1.1\n" +
                         "Host: localhost:8080\n" +
@@ -38,7 +38,7 @@ class RequestTest {
     }
 
     @Test
-    void checkIfGetMethodIsCorrectlyAssigned() throws IOException {
+    void getMethodIsCorrectlyAssigned() throws IOException {
         // given
         StringReader clientInput = new StringReader(exampleGetRequest);
 
@@ -51,7 +51,7 @@ class RequestTest {
     }
 
     @Test
-    void checkIfPostMethodIsCorrectlyAssigned() throws IOException {
+    void postMethodIsCorrectlyAssigned() throws IOException {
         // given
         StringReader clientInput = new StringReader(examplePostRequest);
 
@@ -64,7 +64,7 @@ class RequestTest {
     }
 
     @Test
-    void checkIfOptionsMethodIsCorrectlyAssigned() throws IOException {
+    void optionsMethodIsCorrectlyAssigned() throws IOException {
         // given
         StringReader clientInput = new StringReader(exampleOptionsRequest);
 
@@ -74,5 +74,18 @@ class RequestTest {
 
         // then
         assertThat(methodCheck).isEqualTo(new boolean[]{false, false, true});
+    }
+
+    @Test
+    void getMethodHasCorrectUrl() throws IOException {
+        // given
+        StringReader clientInput = new StringReader(exampleGetRequest);
+
+        // when
+        Request request = new Request(new BufferedReader(clientInput));
+        String assignedUrl = request.getUrl();
+
+        // then
+        assertThat(assignedUrl).isEqualTo("http://www.w3.org/pub/WWW/TheProject.html");
     }
 }
