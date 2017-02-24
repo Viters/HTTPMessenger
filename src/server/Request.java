@@ -99,6 +99,9 @@ public class Request {
             Matcher matcher = varNamePattern.matcher(line);
             if (matcher.find()) {
                 String name = matcher.group(0);
+                if (!requestIterator.hasNext()) {
+                    break;
+                }
                 requestIterator.next();
                 String value = requestIterator.next();
                 this.data.put(name, value);
