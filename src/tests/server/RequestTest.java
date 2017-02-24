@@ -41,91 +41,89 @@ class RequestTest {
     @Test
     void getMethodIsCorrectlyAssigned() throws IOException {
         // given
-        StringReader clientInput = new StringReader(exampleGetRequest);
+        Request request = parseClientRequestAndMakeRequestObject(exampleGetRequest);
 
         // when
-        Request request = new Request(new BufferedReader(clientInput));
-        boolean[] methodCheck = {request.isGet(), request.isPost(), request.isOption()};
+        boolean[] requestMethodsChecks = {request.isGet(), request.isPost(), request.isOption()};
 
         // then
-        assertThat(methodCheck).isEqualTo(new boolean[]{true, false, false});
+        assertThat(requestMethodsChecks).isEqualTo(new boolean[]{true, false, false});
     }
 
     @Test
     void postMethodIsCorrectlyAssigned() throws IOException {
         // given
-        StringReader clientInput = new StringReader(examplePostRequest);
+        Request request = parseClientRequestAndMakeRequestObject(examplePostRequest);
 
         // when
-        Request request = new Request(new BufferedReader(clientInput));
-        boolean[] methodCheck = {request.isGet(), request.isPost(), request.isOption()};
+        boolean[] requestMethodsChecks = {request.isGet(), request.isPost(), request.isOption()};
 
         // then
-        assertThat(methodCheck).isEqualTo(new boolean[]{false, true, false});
+        assertThat(requestMethodsChecks).isEqualTo(new boolean[]{false, true, false});
     }
 
     @Test
     void optionsMethodIsCorrectlyAssigned() throws IOException {
         // given
-        StringReader clientInput = new StringReader(exampleOptionsRequest);
+        Request request = parseClientRequestAndMakeRequestObject(exampleOptionsRequest);
 
         // when
-        Request request = new Request(new BufferedReader(clientInput));
-        boolean[] methodCheck = {request.isGet(), request.isPost(), request.isOption()};
+        boolean[] requestMethodsChecks = {request.isGet(), request.isPost(), request.isOption()};
 
         // then
-        assertThat(methodCheck).isEqualTo(new boolean[]{false, false, true});
+        assertThat(requestMethodsChecks).isEqualTo(new boolean[]{false, false, true});
     }
 
     @Test
     void getMethodHasCorrectUrl() throws IOException {
         // given
-        StringReader clientInput = new StringReader(exampleGetRequest);
+        Request request = parseClientRequestAndMakeRequestObject(exampleGetRequest);
 
         // when
-        Request request = new Request(new BufferedReader(clientInput));
-        String assignedUrl = request.getUrl();
+        String requestUrl = request.getUrl();
 
         // then
-        assertThat(assignedUrl).isEqualTo("http://www.w3.org/pub/WWW/TheProject.html");
+        assertThat(requestUrl).isEqualTo("http://www.w3.org/pub/WWW/TheProject.html");
     }
 
     @Test
     void postMethodHasCorrectUrl() throws IOException {
         // given
-        StringReader clientInput = new StringReader(examplePostRequest);
+        Request request = parseClientRequestAndMakeRequestObject(examplePostRequest);
 
         // when
-        Request request = new Request(new BufferedReader(clientInput));
-        String assignedUrl = request.getUrl();
+        String requestUrl = request.getUrl();
 
         // then
-        assertThat(assignedUrl).isEqualTo("/user");
+        assertThat(requestUrl).isEqualTo("/user");
     }
 
     @Test
     void getMethodHasCorrectData() throws IOException {
         // given
-        StringReader clientInput = new StringReader(exampleGetRequest);
+        Request request = parseClientRequestAndMakeRequestObject(exampleGetRequest);
 
         // when
-        Request request = new Request(new BufferedReader(clientInput));
-        Map data = request.getData();
+        Map<String, String> requestData = request.getData();
 
         // then
-        assertThat(data).containsEntry("data", "test").containsEntry("field", "value");
+        assertThat(requestData).containsEntry("data", "test").containsEntry("field", "value");
     }
 
     @Test
     void postMethodHasCorrectData() throws IOException {
         // given
-        StringReader clientInput = new StringReader(examplePostRequest);
+        Request request = parseClientRequestAndMakeRequestObject(examplePostRequest);
 
         // when
-        Request request = new Request(new BufferedReader(clientInput));
-        Map data = request.getData();
+        Map<String, String> requestData = request.getData();
 
         // then
-        assertThat(data).containsEntry("name", "test");
+        assertThat(requestData).containsEntry("name", "test");
+    }
+
+    private static Request parseClientRequestAndMakeRequestObject(String clientRequest) throws IOException {
+        StringReader clientInput = new StringReader(clientRequest);
+        return new Request(new BufferedReader(clientInput));
     }
 }
