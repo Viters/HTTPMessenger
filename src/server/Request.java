@@ -52,25 +52,19 @@ public class Request {
 
     private void parseRequest(BufferedReader request) throws IOException {
         String firstLine = request.readLine();
-        String query = "";
         method = parseMethod(firstLine);
 
         if (this.isOption()) {
             return;
         }
 
-        if (this.isGet()) {
-            query = firstLine.substring(4, (firstLine.lastIndexOf("HTTP/1.1")) - 1);
-        } else if (this.isPost()) {
-            query = firstLine.substring(5, (firstLine.lastIndexOf("HTTP/1.1")) - 1);
-        }
+        url = parseUrl(firstLine);
 
         if (this.isGet()) {
-            data = splitQuery(query);
+            data = splitQuery(url);
             return;
         }
 
-        url = query;
         String data;
         int contentLength = 0;
         while ((data = request.readLine()).length() > 0) {
@@ -107,8 +101,11 @@ public class Request {
     }
 
     private String parseMethod(String requestFirstLine) {
-        // First line is specified to look like this "GET http://url HTTP/ver"
         return requestFirstLine.substring(0, requestFirstLine.indexOf(" "));
+    }
+
+    private static String parseUrl(String requestFirstLine) {
+        return requestFirstLine.substring(requestFirstLine.indexOf(" ") + 1, requestFirstLine.lastIndexOf("HTTP") - 1);
     }
 
     private Map<String, String> splitQuery(String url) throws UnsupportedEncodingException {
