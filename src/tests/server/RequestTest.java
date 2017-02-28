@@ -80,7 +80,7 @@ class RequestTest {
         Request request = parseClientRequestAndMakeRequestObject(exampleGetRequest);
 
         // when
-        String requestUrl = request.getUrl();
+        String requestUrl = request.url;
 
         // then
         assertThat(requestUrl).isEqualTo("http://www.w3.org/pub/WWW/TheProject.html");
@@ -92,7 +92,7 @@ class RequestTest {
         Request request = parseClientRequestAndMakeRequestObject(examplePostRequest);
 
         // when
-        String requestUrl = request.getUrl();
+        String requestUrl = request.url;
 
         // then
         assertThat(requestUrl).isEqualTo("/user");
@@ -104,7 +104,7 @@ class RequestTest {
         Request request = parseClientRequestAndMakeRequestObject(exampleGetRequest);
 
         // when
-        Map<String, String> requestData = request.getData();
+        Map<String, String> requestData = request.data;
 
         // then
         assertThat(requestData).containsEntry("data", "test").containsEntry("field", "value");
@@ -116,7 +116,7 @@ class RequestTest {
         Request request = parseClientRequestAndMakeRequestObject(examplePostRequest);
 
         // when
-        Map<String, String> requestData = request.getData();
+        Map<String, String> requestData = request.data;
 
         // then
         assertThat(requestData).containsEntry("name", "test");
@@ -124,6 +124,6 @@ class RequestTest {
 
     private static Request parseClientRequestAndMakeRequestObject(String clientRequest) throws IOException {
         StringReader clientInput = new StringReader(clientRequest);
-        return new Request(new BufferedReader(clientInput));
+        return RequestParser.parseRequest(new BufferedReader(clientInput));
     }
 }

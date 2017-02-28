@@ -7,25 +7,25 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
-public class MessengerController extends Controller {
+class MessengerController extends Controller {
     private static MessengerState state = (MessengerState) HTTPServer.getState();
 
-    public static Response fetchNewMessagesForUser(Request request) {
-        String userToken = request.getData().get("apiToken");
-        int id = Integer.parseInt(request.getData().get("id"));
+    static Response fetchNewMessagesForUser(Request request) {
+        String userToken = request.data.get("apiToken");
+        int id = Integer.parseInt(request.data.get("id"));
         ArrayList<JSONObject> messages = state.getSerializedMessagesForUser(userToken, id);
         return ResponseFactory.json(messages);
     }
 
-    public static Response fetchNewUsers(Request request) {
+    static Response fetchNewUsers(Request request) {
         ArrayList<JSONObject> users = state.getSerializedUsers();
         return ResponseFactory.json(users);
     }
 
-    public static Response createNewMessage(Request request) {
-        String userToken = request.getData().get("apiToken");
-        String messageText = request.getData().get("message");
-        int idTo = Integer.parseInt(request.getData().get("to"));
+    static Response createNewMessage(Request request) {
+        String userToken = request.data.get("apiToken");
+        String messageText = request.data.get("message");
+        int idTo = Integer.parseInt(request.data.get("to"));
         User from = state.getUserByToken(userToken);
         User to = state.getUserById(idTo);
 
@@ -48,8 +48,8 @@ public class MessengerController extends Controller {
         return ResponseFactory.json(responseData);
     }
 
-    public static Response registerNewUser(Request request) {
-        String name = request.getData().get("name");
+    static Response registerNewUser(Request request) {
+        String name = request.data.get("name");
         int lastId = 0;
         if (state.getUsers().size() > 0) {
             lastId = state.getUsers().get(state.getUsers().size() - 1).getId();

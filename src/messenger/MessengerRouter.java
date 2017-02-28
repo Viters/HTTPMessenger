@@ -5,7 +5,7 @@ import server.*;
 public class MessengerRouter extends Router {
     @Override
     public Response getRoute(Request request) {
-        switch(request.getUrl()) {
+        switch(request.url) {
             case "/":
                 return ResponseFactory.ok().appendBodyAndReturnSelf("<h1>Hello!</h1>");
             case "/messages":
@@ -19,7 +19,7 @@ public class MessengerRouter extends Router {
 
     @Override
     public Response postRoute(Request request) {
-        switch(request.getUrl()) {
+        switch(request.url) {
             case "/user":
                 return MessengerController.registerNewUser(request);
             case "/message":

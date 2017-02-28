@@ -7,7 +7,7 @@ public class Processor implements Runnable {
     private Socket client;
     private Router router;
 
-    public Processor(Socket client, Router router) {
+    Processor(Socket client, Router router) {
         this.client = client;
         this.router = router;
     }
@@ -29,7 +29,7 @@ public class Processor implements Runnable {
     private Request parseRequest() throws IOException {
         BufferedReader clientInput = new BufferedReader(new InputStreamReader(client.getInputStream()));
 
-        return new Request(clientInput);
+        return RequestParser.parseRequest(clientInput);
     }
 
     private void sendResponse(Response response) throws IOException {
