@@ -9,13 +9,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RequestParser {
-    private final static Pattern varNamePattern;
-    private final static Pattern contentLengthPattern;
+    private final static Pattern VAR_NAME_PATTERN;
+    private final static Pattern CONTENT_LENGTH_PATTERN;
     private final static String LINE_SEPARATOR = "\r\n";
 
     static {
-        varNamePattern = Pattern.compile("(?<=name\\=\\\")(.+)(?=\\\")");
-        contentLengthPattern = Pattern.compile("(?<=Content-Length\\: )([0-9]+)");
+        VAR_NAME_PATTERN = Pattern.compile("(?<=name\\=\\\")(.+)(?=\\\")");
+        CONTENT_LENGTH_PATTERN = Pattern.compile("(?<=Content-Length\\: )([0-9]+)");
     }
 
     public static Request parseRequest(BufferedReader clientInputRequest) throws IOException {
@@ -37,7 +37,7 @@ public class RequestParser {
         String data;
         int contentLength = 0;
         while ((data = clientInputRequest.readLine()).length() > 0) {
-            Matcher matcher = contentLengthPattern.matcher(data);
+            Matcher matcher = CONTENT_LENGTH_PATTERN.matcher(data);
             if (matcher.find()) {
                 contentLength = Integer.parseInt(matcher.group(0));
             }
@@ -59,7 +59,7 @@ public class RequestParser {
 
         while (requestIterator.hasNext()) {
             String line = requestIterator.next();
-            Matcher matcher = varNamePattern.matcher(line);
+            Matcher matcher = VAR_NAME_PATTERN.matcher(line);
             if (matcher.find()) {
                 String name = matcher.group(0);
                 requestIterator.next();
