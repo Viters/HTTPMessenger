@@ -13,30 +13,74 @@ public class RequestParser {
     private final static Pattern CONTENT_LENGTH_PATTERN;
     private final static String LINE_SEPARATOR = "\r\n";
 
+    private Request request;
+    private String clientRequestFirstLine;
+
     static {
+        // matches: name="value"
         VAR_NAME_PATTERN = Pattern.compile("(?<=name\\=\\\")(.+)(?=\\\")");
+
+        // matches: Content-Length: [any int]
         CONTENT_LENGTH_PATTERN = Pattern.compile("(?<=Content-Length\\: )([0-9]+)");
     }
 
-    public static Request parseRequest(BufferedReader clientInputRequest) throws IOException {
-        Request request = new Request();
-        String firstLine = clientInputRequest.readLine();
-        request.method = parseMethod(firstLine);
+    public Request parseRequest(BufferedReader clientBufferedRequest) throws IOException {
+        prepareNewRequest();
 
-        request.url = parseUrl(firstLine);
+        clientRequestFirstLine = clientBufferedRequest.readLine();
 
-        if (request.isOption()) {
-            return request;
-        }
+        request.method = extractMethodFromRequestFirstLine();
 
         if (request.isGet()) {
-            request.data = splitQuery(request);
-            return request;
+            processGetRequest();
+        } else if (request.isOptions()) {
+            processOptionsRequest();
+        } else if (request.isPost()) {
+            processPostRequest(clientBufferedRequest);
         }
+
+        return request;
+    }
+
+    private void prepareNewRequest() throws IOException {
+        request = new Request();
+    }
+
+    private String extractMethodFromRequestFirstLine() {
+        return clientRequestFirstLine.substring(0, clientRequestFirstLine.indexOf(" "));
+    }
+
+    private void processGetRequest() throws UnsupportedEncodingException {
+        String targetWithBody = extractTargetFromRequestFirstLine();
+        String[] targetAndBodyParted = targetWithBody.split("\\?");
+        request.target = targetAndBodyParted[0];
+        boolean requestHasBody = targetAndBodyParted.length > 1;
+        if (requestHasBody) {
+            request.body = extractGetRequestBody(targetAndBodyParted[1]);
+        }
+    }
+
+    private Map<String, String> extractGetRequestBody(String bodyUrlEncoded) throws UnsupportedEncodingException {
+        HashMap<String, String> body = new HashMap<>();
+        String[] pairs = bodyUrlEncoded.split("&");
+        for (String pair : pairs) {
+            String key = URLDecoder.decode(pair.substring(0, pair.indexOf("=")), "UTF-8");
+            String value = URLDecoder.decode(pair.substring(pair.indexOf("=") + 1), "UTF-8");
+            body.put(key, value);
+        }
+        return body;
+    }
+
+    private void processOptionsRequest() {
+        request.target = extractTargetFromRequestFirstLine();
+    }
+
+    private void processPostRequest(BufferedReader clientBufferedRequest) throws IOException {
+        request.target = extractTargetFromRequestFirstLine();
 
         String data;
         int contentLength = 0;
-        while ((data = clientInputRequest.readLine()).length() > 0) {
+        while ((data = clientBufferedRequest.readLine()).length() > 0) {
             Matcher matcher = CONTENT_LENGTH_PATTERN.matcher(data);
             if (matcher.find()) {
                 contentLength = Integer.parseInt(matcher.group(0));
@@ -44,12 +88,12 @@ public class RequestParser {
         }
 
         if (contentLength == 0) {
-            return request;
+            return;
         }
 
-        clientInputRequest.readLine();
+        clientBufferedRequest.readLine();
         char buffer[] = new char[contentLength];
-        clientInputRequest.read(buffer);
+        clientBufferedRequest.read(buffer);
         String requestBody = new String(buffer);
         ArrayList requestBodySplit = new ArrayList<>(
                 Arrays.asList(requestBody.split(LINE_SEPARATOR))
@@ -64,30 +108,14 @@ public class RequestParser {
                 String name = matcher.group(0);
                 requestIterator.next();
                 String value = requestIterator.next();
-                request.data.put(name, value);
+                request.body.put(name, value);
             }
         }
-
-        return request;
     }
 
-    private static String parseMethod(String requestFirstLine) {
-        return requestFirstLine.substring(0, requestFirstLine.indexOf(" "));
-    }
-
-    private static String parseUrl(String requestFirstLine) {
-        return requestFirstLine.substring(requestFirstLine.indexOf(" ") + 1, requestFirstLine.lastIndexOf("HTTP") - 1);
-    }
-
-    private static Map<String, String> splitQuery(Request request) throws UnsupportedEncodingException {
-        Map<String, String> query_pairs = new HashMap<>();
-        String[] querySplit = request.url.split("\\?");
-        ArrayList<String> pairs = new ArrayList<>(Arrays.asList(querySplit[1].split("&")));
-        request.url = querySplit[0];
-        for (String pair : pairs) {
-            int idx = pair.indexOf("=");
-            query_pairs.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"), URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
-        }
-        return query_pairs;
+    private String extractTargetFromRequestFirstLine() {
+        return clientRequestFirstLine.substring(
+                clientRequestFirstLine.indexOf(" ") + 1,
+                clientRequestFirstLine.lastIndexOf("HTTP") - 1);
     }
 }

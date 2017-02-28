@@ -29,7 +29,7 @@ public class Processor implements Runnable {
     private Request parseRequest() throws IOException {
         BufferedReader clientInput = new BufferedReader(new InputStreamReader(client.getInputStream()));
 
-        return RequestParser.parseRequest(clientInput);
+        return new RequestParser().parseRequest(clientInput);
     }
 
     private void sendResponse(Response response) throws IOException {

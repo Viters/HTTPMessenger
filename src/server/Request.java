@@ -6,22 +6,22 @@ import java.util.Map;
 
 public class Request {
     public String method;
-    public String url;
-    public Map<String, String> data;
+    public String target;
+    public Map<String, String> body;
 
     Request() throws IOException {
-        data = new HashMap<>();
+        body = new HashMap<>();
     }
 
-    boolean isGet() {
+    public boolean isGet() {
         return method.equalsIgnoreCase("GET");
     }
 
-    boolean isPost() {
+    public boolean isPost() {
         return method.equalsIgnoreCase("POST");
     }
 
-    boolean isOption() {
+    public boolean isOptions() {
         return method.equalsIgnoreCase("OPTIONS");
     }
 
@@ -29,8 +29,8 @@ public class Request {
     public String toString() {
         return "Request{" +
                 "method='" + method + '\'' +
-                ", url='" + url + '\'' +
-                ", data=" + data +
+                ", target='" + target + '\'' +
+                ", body=" + body +
                 '}';
     }
 }

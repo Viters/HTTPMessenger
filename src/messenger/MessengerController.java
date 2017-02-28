@@ -11,8 +11,8 @@ class MessengerController extends Controller {
     private static MessengerState state = (MessengerState) HTTPServer.getState();
 
     static Response fetchNewMessagesForUser(Request request) {
-        String userToken = request.data.get("apiToken");
-        int id = Integer.parseInt(request.data.get("id"));
+        String userToken = request.body.get("apiToken");
+        int id = Integer.parseInt(request.body.get("id"));
         ArrayList<JSONObject> messages = state.getSerializedMessagesForUser(userToken, id);
         return ResponseFactory.json(messages);
     }
@@ -23,9 +23,9 @@ class MessengerController extends Controller {
     }
 
     static Response createNewMessage(Request request) {
-        String userToken = request.data.get("apiToken");
-        String messageText = request.data.get("message");
-        int idTo = Integer.parseInt(request.data.get("to"));
+        String userToken = request.body.get("apiToken");
+        String messageText = request.body.get("message");
+        int idTo = Integer.parseInt(request.body.get("to"));
         User from = state.getUserByToken(userToken);
         User to = state.getUserById(idTo);
 
@@ -49,7 +49,7 @@ class MessengerController extends Controller {
     }
 
     static Response registerNewUser(Request request) {
-        String name = request.data.get("name");
+        String name = request.body.get("name");
         int lastId = 0;
         if (state.getUsers().size() > 0) {
             lastId = state.getUsers().get(state.getUsers().size() - 1).getId();

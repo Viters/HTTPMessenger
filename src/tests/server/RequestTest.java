@@ -15,7 +15,7 @@ class RequestTest {
     private static final String exampleOptionsRequest;
 
     static {
-        exampleGetRequest = "GET http://www.w3.org/pub/WWW/TheProject.html?data=test&field=value HTTP/1.1";
+        exampleGetRequest = "GET http://www.w3.org/pub/WWW/TheProject.html?body=test&field=value HTTP/1.1";
         examplePostRequest =
                 "POST /user HTTP/1.1\r\n" +
                         "Host: localhost:8080\r\n" +
@@ -31,7 +31,7 @@ class RequestTest {
                         "Accept-Language: pl-PL,pl;q=0.8,en-US;q=0.6,en;q=0.4\r\n" +
                         "\r\n" +
                         "------WebKitFormBoundaryAIXmQw4jM3Umma2B\r\n" +
-                        "Content-Disposition: form-data; name=\"name\"\r\n" +
+                        "Content-Disposition: form-body; name=\"name\"\r\n" +
                         "\r\n" +
                         "test\r\n" +
                         "------WebKitFormBoundaryAIXmQw4jM3Umma2B--";
@@ -44,7 +44,7 @@ class RequestTest {
         Request request = parseClientRequestAndMakeRequestObject(exampleGetRequest);
 
         // when
-        boolean[] requestMethodsChecks = {request.isGet(), request.isPost(), request.isOption()};
+        boolean[] requestMethodsChecks = {request.isGet(), request.isPost(), request.isOptions()};
 
         // then
         assertThat(requestMethodsChecks).isEqualTo(new boolean[]{true, false, false});
@@ -56,7 +56,7 @@ class RequestTest {
         Request request = parseClientRequestAndMakeRequestObject(examplePostRequest);
 
         // when
-        boolean[] requestMethodsChecks = {request.isGet(), request.isPost(), request.isOption()};
+        boolean[] requestMethodsChecks = {request.isGet(), request.isPost(), request.isOptions()};
 
         // then
         assertThat(requestMethodsChecks).isEqualTo(new boolean[]{false, true, false});
@@ -68,7 +68,7 @@ class RequestTest {
         Request request = parseClientRequestAndMakeRequestObject(exampleOptionsRequest);
 
         // when
-        boolean[] requestMethodsChecks = {request.isGet(), request.isPost(), request.isOption()};
+        boolean[] requestMethodsChecks = {request.isGet(), request.isPost(), request.isOptions()};
 
         // then
         assertThat(requestMethodsChecks).isEqualTo(new boolean[]{false, false, true});
@@ -80,7 +80,7 @@ class RequestTest {
         Request request = parseClientRequestAndMakeRequestObject(exampleGetRequest);
 
         // when
-        String requestUrl = request.url;
+        String requestUrl = request.target;
 
         // then
         assertThat(requestUrl).isEqualTo("http://www.w3.org/pub/WWW/TheProject.html");
@@ -92,7 +92,7 @@ class RequestTest {
         Request request = parseClientRequestAndMakeRequestObject(examplePostRequest);
 
         // when
-        String requestUrl = request.url;
+        String requestUrl = request.target;
 
         // then
         assertThat(requestUrl).isEqualTo("/user");
@@ -104,10 +104,10 @@ class RequestTest {
         Request request = parseClientRequestAndMakeRequestObject(exampleGetRequest);
 
         // when
-        Map<String, String> requestData = request.data;
+        Map<String, String> requestData = request.body;
 
         // then
-        assertThat(requestData).containsEntry("data", "test").containsEntry("field", "value");
+        assertThat(requestData).containsEntry("body", "test").containsEntry("field", "value");
     }
 
     @Test
@@ -116,7 +116,7 @@ class RequestTest {
         Request request = parseClientRequestAndMakeRequestObject(examplePostRequest);
 
         // when
-        Map<String, String> requestData = request.data;
+        Map<String, String> requestData = request.body;
 
         // then
         assertThat(requestData).containsEntry("name", "test");
@@ -124,6 +124,6 @@ class RequestTest {
 
     private static Request parseClientRequestAndMakeRequestObject(String clientRequest) throws IOException {
         StringReader clientInput = new StringReader(clientRequest);
-        return RequestParser.parseRequest(new BufferedReader(clientInput));
+        return new RequestParser().parseRequest(new BufferedReader(clientInput));
     }
 }

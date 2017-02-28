@@ -8,7 +8,7 @@ public abstract class Router {
         else if (request.isPost()) {
             return postRoute(request);
         }
-        else if (request.isOption())
+        else if (request.isOptions())
             return ResponseFactory.allowCORS();
 
         return null;
