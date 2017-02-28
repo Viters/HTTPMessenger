@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Response {
-    private static String RESPONSE_SEPARATOR = "\r\n";
+    private final static String LINE_SEPARATOR = "\r\n";
     private List<String> headers;
     private String body;
 
@@ -12,7 +12,7 @@ public class Response {
         String formattedResponse = getFormattedHeaders();
         if (body != null) {
             // Response body should be isolated with one line from headers
-            formattedResponse += RESPONSE_SEPARATOR + body;
+            formattedResponse += LINE_SEPARATOR + body;
         }
         return formattedResponse;
     }
@@ -53,7 +53,7 @@ public class Response {
     private String getFormattedHeaders() {
         String preparedHeaders = "";
         for (String singleHeaderTag : this.headers) {
-            preparedHeaders += singleHeaderTag + RESPONSE_SEPARATOR;
+            preparedHeaders += singleHeaderTag + LINE_SEPARATOR;
         }
         return preparedHeaders;
     }
