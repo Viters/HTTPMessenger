@@ -1,7 +1,9 @@
 package server;
 
+import server.exceptions.UnknownMethodException;
+
 public abstract class Router {
-    public Response route(Request request) {
+    public Response route(Request request) throws UnknownMethodException {
         if (request.isGet()) {
             return getRoute(request);
         }
@@ -11,7 +13,7 @@ public abstract class Router {
         else if (request.isOptions())
             return ResponseFactory.allowCORS();
 
-        return null;
+        throw new UnknownMethodException();
     }
 
     public abstract Response getRoute(Request request);

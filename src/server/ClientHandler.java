@@ -1,5 +1,7 @@
 package server;
 
+import server.exceptions.UnknownMethodException;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -36,7 +38,12 @@ public class ClientHandler implements Runnable {
     }
 
     private Response prepareResponse(Request request) {
-        return router.route(request);
+        try {
+            return router.route(request);
+        } catch (UnknownMethodException e) {
+            e.printStackTrace();
+            return new Response();
+        }
     }
 
     private void sendResponse(Response response) throws IOException {
