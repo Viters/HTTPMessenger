@@ -54,18 +54,24 @@ class RequestParser {
     }
 
     private void processGetRequest() throws UnsupportedEncodingException {
-        String targetWithBody = extractTargetFromRequestFirstLine();
-        String[] targetAndBodyParted = targetWithBody.split("\\?");
-        request.target = targetAndBodyParted[0];
-        boolean requestHasBody = targetAndBodyParted.length > 1;
+        String targetWithURLParameters = extractTargetFromRequestFirstLine();
+        String[] targetAndURLParametersParted = targetWithURLParameters.split("\\?");
+        request.target = targetAndURLParametersParted[0];
+        boolean requestHasBody = targetAndURLParametersParted.length > 1;
         if (requestHasBody) {
-            request.body = extractGetRequestBody(targetAndBodyParted[1]);
+            request.body = extractGetRequestBody(targetAndURLParametersParted[1]);
         }
     }
 
-    private Map<String, String> extractGetRequestBody(String bodyUrlEncoded) throws UnsupportedEncodingException {
+    private String extractTargetFromRequestFirstLine() {
+        return clientRequestFirstLine.substring(
+                clientRequestFirstLine.indexOf(" ") + 1,
+                clientRequestFirstLine.lastIndexOf("HTTP") - 1);
+    }
+
+    private Map<String, String> extractGetRequestBody(String bodyURLEncoded) throws UnsupportedEncodingException {
         HashMap<String, String> body = new HashMap<>();
-        String[] pairs = bodyUrlEncoded.split("&");
+        String[] pairs = bodyURLEncoded.split("&");
         for (String pair : pairs) {
             String key = URLDecoder.decode(pair.substring(0, pair.indexOf("=")), "UTF-8");
             String value = URLDecoder.decode(pair.substring(pair.indexOf("=") + 1), "UTF-8");
@@ -148,11 +154,5 @@ class RequestParser {
         requestBodyIterator.next();
         String value = requestBodyIterator.next();
         request.body.put(name, value);
-    }
-
-    private String extractTargetFromRequestFirstLine() {
-        return clientRequestFirstLine.substring(
-                clientRequestFirstLine.indexOf(" ") + 1,
-                clientRequestFirstLine.lastIndexOf("HTTP") - 1);
     }
 }
