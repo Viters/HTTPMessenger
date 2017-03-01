@@ -1,5 +1,7 @@
 package server;
 
+import com.sun.org.apache.regexp.internal.RE;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -8,23 +10,24 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RequestParser {
+class RequestParser {
     private final static Pattern VAR_NAME_PATTERN;
-    private final static Pattern CONTENT_LENGTH_PATTERN;
+    private final static Pattern CONTENT_LENGTH_VALUE_PATTERN;
     private final static String LINE_SEPARATOR = "\r\n";
 
     private Request request;
     private String clientRequestFirstLine;
+    private ArrayList<String> requestHeaders = new ArrayList<>();
 
     static {
         // matches: name="value"
         VAR_NAME_PATTERN = Pattern.compile("(?<=name\\=\\\")(.+)(?=\\\")");
 
         // matches: Content-Length: [any int]
-        CONTENT_LENGTH_PATTERN = Pattern.compile("(?<=Content-Length\\: )([0-9]+)");
+        CONTENT_LENGTH_VALUE_PATTERN = Pattern.compile("(?<=Content-Length\\: )([0-9]+)");
     }
 
-    public Request parseRequest(BufferedReader clientBufferedRequest) throws IOException {
+    Request parseRequest(BufferedReader clientBufferedRequest) throws IOException {
         prepareNewRequest();
 
         clientRequestFirstLine = clientBufferedRequest.readLine();
@@ -78,39 +81,73 @@ public class RequestParser {
     private void processPostRequest(BufferedReader clientBufferedRequest) throws IOException {
         request.target = extractTargetFromRequestFirstLine();
 
-        String data;
-        int contentLength = 0;
-        while ((data = clientBufferedRequest.readLine()).length() > 0) {
-            Matcher matcher = CONTENT_LENGTH_PATTERN.matcher(data);
-            if (matcher.find()) {
-                contentLength = Integer.parseInt(matcher.group(0));
-            }
-        }
+        processPostRequestHeaders(clientBufferedRequest);
+
+        int contentLength = findContentLengthHeaderValue();
 
         if (contentLength == 0) {
             return;
         }
 
-        clientBufferedRequest.readLine();
-        char buffer[] = new char[contentLength];
-        clientBufferedRequest.read(buffer);
-        String requestBody = new String(buffer);
-        ArrayList requestBodySplit = new ArrayList<>(
-                Arrays.asList(requestBody.split(LINE_SEPARATOR))
-        );
+        ArrayList<String> unprocessedPostBody = getUnprocessedPostBody(clientBufferedRequest, contentLength);
 
-        Iterator<String> requestIterator = requestBodySplit.iterator();
+        processPostBody(unprocessedPostBody);
+    }
 
-        while (requestIterator.hasNext()) {
-            String line = requestIterator.next();
-            Matcher matcher = VAR_NAME_PATTERN.matcher(line);
-            if (matcher.find()) {
-                String name = matcher.group(0);
-                requestIterator.next();
-                String value = requestIterator.next();
-                request.body.put(name, value);
+    private void processPostRequestHeaders(BufferedReader clientBufferedRequest) throws IOException {
+        String currentHeader;
+        do {
+            currentHeader = clientBufferedRequest.readLine();
+            requestHeaders.add(currentHeader);
+        }
+        while (currentHeader.length() > 0);
+    }
+
+    private int findContentLengthHeaderValue() throws IOException {
+        for (String requestHeader : requestHeaders) {
+            Matcher lineContainsContentLengthMatcher = CONTENT_LENGTH_VALUE_PATTERN.matcher(requestHeader);
+            if (lineContainsContentLengthMatcher.find()) {
+                return Integer.parseInt(lineContainsContentLengthMatcher.group(0));
             }
         }
+        return 0;
+    }
+
+    private ArrayList<String> getUnprocessedPostBody(BufferedReader clientBufferedRequest, int contentLength) throws IOException {
+        skipLine(clientBufferedRequest);
+        String requestBody = extractPostBodyFromRequest(clientBufferedRequest, contentLength);
+        return new ArrayList<>(
+                Arrays.asList(requestBody.split(LINE_SEPARATOR))
+        );
+    }
+
+    private void skipLine(BufferedReader clientBufferedRequest) throws IOException {
+        clientBufferedRequest.readLine();
+    }
+
+    private String extractPostBodyFromRequest(BufferedReader clientBufferedRequest, int contentLength) throws IOException {
+        char bodyBuffer[] = new char[contentLength];
+        clientBufferedRequest.read(bodyBuffer);
+        return new String(bodyBuffer);
+    }
+
+    private void processPostBody(ArrayList<String> unprocessedPostBody) {
+        Iterator<String> requestBodyIterator = unprocessedPostBody.iterator();
+
+        while (requestBodyIterator.hasNext()) {
+            String line = requestBodyIterator.next();
+            Matcher lineContainsNameMatcher = VAR_NAME_PATTERN.matcher(line);
+            if (lineContainsNameMatcher.find()) {
+                addBodyNameValuePair(requestBodyIterator, lineContainsNameMatcher);
+            }
+        }
+    }
+
+    private void addBodyNameValuePair(Iterator<String> requestBodyIterator, Matcher lineContainsNameMatcher) {
+        String name = lineContainsNameMatcher.group(0);
+        requestBodyIterator.next();
+        String value = requestBodyIterator.next();
+        request.body.put(name, value);
     }
 
     private String extractTargetFromRequestFirstLine() {
