@@ -27,7 +27,8 @@ public class HTTPServer {
     public void loop() throws IOException {
         while (true) {
             Socket client = serverSocket.accept();
-            executorService.submit(new Processor(client, router));
+            executorService.submit(new ClientHandler(client, router));
+            client.close();
         }
     }
 }

@@ -3,11 +3,11 @@ package server;
 import java.io.*;
 import java.net.Socket;
 
-public class Processor implements Runnable {
+public class ClientHandler implements Runnable {
     private Socket client;
     private Router router;
 
-    Processor(Socket client, Router router) {
+    ClientHandler(Socket client, Router router) {
         this.client = client;
         this.router = router;
     }
@@ -16,11 +16,10 @@ public class Processor implements Runnable {
     public void run() {
         try {
             Request request = parseRequest();
-            System.out.println(request);
-            Response response = router.route(request);
-            System.out.println(response);
+            logRequest(request);
+            Response response = prepareResponse(request);
+            logResponse(response);
             sendResponse(response);
-            client.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -32,10 +31,22 @@ public class Processor implements Runnable {
         return new RequestParser().parseRequest(clientInput);
     }
 
+    private void logRequest(Request request) {
+        System.out.println(request);
+    }
+
+    private Response prepareResponse(Request request) {
+        return router.route(request);
+    }
+
     private void sendResponse(Response response) throws IOException {
         DataOutputStream outputStream = new DataOutputStream(client.getOutputStream());
         outputStream.write(response.make().getBytes());
         outputStream.flush();
         outputStream.close();
+    }
+
+    private void logResponse(Response response) {
+        System.out.println(response);
     }
 }
