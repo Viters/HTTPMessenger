@@ -88,15 +88,12 @@ class RequestParser {
         request.target = extractTargetFromRequestFirstLine();
 
         processPostRequestHeaders(clientBufferedRequest);
-
         int contentLength = findContentLengthHeaderValue();
-
         if (contentLength == 0) {
             return;
         }
 
         ArrayList<String> unprocessedPostBody = getUnprocessedPostBody(clientBufferedRequest, contentLength);
-
         processPostBody(unprocessedPostBody);
     }
 
