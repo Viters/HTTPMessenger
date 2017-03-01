@@ -1,6 +1,5 @@
 package server;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,7 +8,7 @@ public class Request {
     public String target;
     public Map<String, String> body;
 
-    Request() throws IOException {
+    Request() {
         body = new HashMap<>();
     }
 
