@@ -1,5 +1,6 @@
 package messenger;
 
+import messenger.Models.User;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
@@ -12,6 +13,6 @@ class UserTest {
         User user1 = new User(1, "Tomek", new Date());
         User user2 = new User(2, "Andrzej", new Date());
 
-        assertThat(user1.getToken()).isNotEqualTo(user2.getToken());
+        assertThat(user1.token).isNotEqualTo(user2.token);
     }
 }
