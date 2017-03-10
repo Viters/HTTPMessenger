@@ -1,31 +1,44 @@
 package messenger;
 
+import messenger.Models.Message;
+import messenger.Models.User;
 import org.json.JSONObject;
 import server.State;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
+import java.util.Stack;
 
 public class MessengerState extends State {
-    private ArrayList<User> users;
-    private ArrayList<Message> messages;
+    public Stack<User> users;
+    public ArrayList<Message> messages;
 
     public MessengerState() {
-        users = new ArrayList<>();
+        users = new Stack<>();
         messages = new ArrayList<>();
     }
 
-    public ArrayList<User> getUsers() {
-        return users;
+    public User registerUser(String name) {
+        User newUser = new User(this.getNextValidUserId(), name, new Date());
+        users.push(newUser);
+
+        return newUser;
     }
-    public ArrayList<Message> getMessages() {
-        return messages;
+
+    private int getNextValidUserId() {
+        if (users.isEmpty()) {
+            return 0;
+        }
+        else {
+            return users.peek().id + 1;
+        }
     }
 
     public ArrayList<JSONObject> getSerializedMessagesForUser(String userToken, int lastId) {
         ArrayList<JSONObject> messages = new ArrayList<>();
         this.messages.forEach(m -> {
-            if (m.getTo().getToken().equals(userToken) && m.getId() > lastId) {
+            if (m.toUser.token.equals(userToken) && m.id > lastId) {
                 messages.add(m.toJSON());
             }
         });
@@ -44,7 +57,7 @@ public class MessengerState extends State {
         Iterator<User> iter = users.iterator();
         while (iter.hasNext()) {
             User user = iter.next();
-            if (user.getToken().equals(token)) {
+            if (user.token.equals(token)) {
                 return user;
             }
         }
@@ -55,7 +68,7 @@ public class MessengerState extends State {
         Iterator<User> iter = users.iterator();
         while (iter.hasNext()) {
             User user = iter.next();
-            if (user.getId() == id) {
+            if (user.id == id) {
                 return user;
             }
         }

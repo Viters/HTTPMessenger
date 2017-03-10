@@ -1,6 +1,8 @@
 package messenger;
 
 import com.google.common.collect.ImmutableMap;
+import messenger.Models.Message;
+import messenger.Models.User;
 import org.json.JSONObject;
 import server.*;
 import java.util.ArrayList;
@@ -24,8 +26,8 @@ class MessengerController extends Controller {
 
     static Response createNewMessage(Request request) {
         String userToken = request.body.get("apiToken");
-        String messageText = request.body.get("message");
-        int idTo = Integer.parseInt(request.body.get("to"));
+        String messageText = request.body.get("content");
+        int idTo = Integer.parseInt(request.body.get("toUser"));
         User from = state.getUserByToken(userToken);
         User to = state.getUserById(idTo);
 
@@ -33,33 +35,30 @@ class MessengerController extends Controller {
             return ResponseFactory.notFound();
 
         int lastId = 0;
-        if (state.getMessages().size() > 0) {
-            lastId = state.getMessages().get(state.getMessages().size() - 1).getId();
+        if (state.messages.size() > 0) {
+            lastId = state.messages.get(state.messages.size() - 1).id;
         }
         Message message = new Message(lastId + 1, messageText, from, to);
-        state.getMessages().add(message);
+        state.messages.add(message);
         Map<String, String> responseData = ImmutableMap.of(
-                "id", message.getId().toString(),
-                "message", message.getMessage(),
-                "from", message.getFrom().getId().toString(),
-                "date", message.getCreatedAt().toString(),
-                "to", message.getTo().getId().toString()
+                "id", message.id.toString(),
+                "content", message.content,
+                "fromUser", message.fromUser.id.toString(),
+                "date", message.createdAt.toString(),
+                "toUser", message.toUser.id.toString()
         );
         return ResponseFactory.json(responseData);
     }
 
     static Response registerNewUser(Request request) {
         String name = request.body.get("name");
-        int lastId = 0;
-        if (state.getUsers().size() > 0) {
-            lastId = state.getUsers().get(state.getUsers().size() - 1).getId();
-        }
-        User user = new User(lastId + 1, name, new Date());
-        state.getUsers().add(user);
+
+        User user = state.registerUser(name);
+
         Map<String, String> responseData = ImmutableMap.of(
-                "id", user.getId().toString(),
-                "name", user.getName(),
-                "token", user.getToken()
+                "id", user.id.toString(),
+                "name", user.name,
+                "token", user.token
         );
         return ResponseFactory.json(responseData);
     }
