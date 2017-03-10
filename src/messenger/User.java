@@ -14,8 +14,7 @@ public class User {
     public User(Integer id, String name, Date registerDate) {
         this.id = id;
         this.name = name;
-        TokenGenerator tokenGenerator = new TokenGenerator();
-        this.token = tokenGenerator.nextToken();
+        this.token = TokenGenerator.nextToken();
         this.registerDate = registerDate;
     }
 
