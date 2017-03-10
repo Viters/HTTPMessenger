@@ -1,12 +1,12 @@
-package messenger;
+package messenger.Helpers;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
 
-final class TokenGenerator {
+public final class TokenGenerator {
     private static SecureRandom random = new SecureRandom();
 
-    static String nextToken() {
+    public static String nextToken() {
         return new BigInteger(130, random).toString(32);
     }
 }
