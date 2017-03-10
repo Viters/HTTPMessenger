@@ -1,6 +1,6 @@
 package messenger;
 
-import messenger.Models.User;
+import messenger.models.User;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;

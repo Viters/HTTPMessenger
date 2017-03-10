@@ -1,7 +1,7 @@
 package messenger;
 
-import messenger.Models.Message;
-import messenger.Models.User;
+import messenger.models.Message;
+import messenger.models.User;
 import org.json.JSONObject;
 import server.State;
 

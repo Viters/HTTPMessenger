@@ -1,12 +1,11 @@
 package messenger;
 
 import com.google.common.collect.ImmutableMap;
-import messenger.Models.Message;
-import messenger.Models.User;
+import messenger.models.Message;
+import messenger.models.User;
 import org.json.JSONObject;
 import server.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Map;
 
 class MessengerController extends Controller {

@@ -1,4 +1,4 @@
-package messenger.Helpers;
+package messenger.helpers;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;

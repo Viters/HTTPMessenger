@@ -1,6 +1,6 @@
-package messenger.Models;
+package messenger.models;
 
-import messenger.Helpers.TokenGenerator;
+import messenger.helpers.TokenGenerator;
 import org.json.JSONObject;
 
 import java.util.Date;

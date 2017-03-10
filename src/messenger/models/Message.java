@@ -1,4 +1,4 @@
-package messenger.Models;
+package messenger.models;
 
 import org.json.JSONObject;
 
