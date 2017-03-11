@@ -41,10 +41,10 @@ public class UsersContainer {
     }
 
     public User registerUser(String name) {
-        User newUser = new User(this.getNextValidUserId(), name, new Date());
-        users.push(newUser);
+        User user = new User(this.getNextValidUserId(), name, new Date());
+        users.push(user);
 
-        return newUser;
+        return user;
     }
 
     private int getNextValidUserId() {
