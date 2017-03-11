@@ -13,6 +13,6 @@ class UsersContainerTest {
         users.registerUser("Tomasz");
         users.registerUser("Andrzej");
 
-        assertThat(users.get(1).id).isGreaterThan(users.get(0).id);
+        assertThat(users.getByOrdinal(1).id).isGreaterThan(users.getByOrdinal(0).id);
     }
 }

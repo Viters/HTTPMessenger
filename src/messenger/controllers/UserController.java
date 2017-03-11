@@ -13,7 +13,7 @@ public class UserController extends Controller {
     private static State state = (State) HTTPServer.getState();
 
     public static Response fetchNewUsers(Request request) {
-        ArrayList<JSONObject> users = state.users.getSerializedUsers();
+        ArrayList<JSONObject> users = state.users.serialize();
         return ResponseFactory.json(users);
     }
 

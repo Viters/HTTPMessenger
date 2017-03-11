@@ -1,5 +1,6 @@
 package messenger.models;
 
+import messenger.exceptions.UserNotFoundException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -14,11 +15,11 @@ public class UsersContainer {
         users = new Stack<>();
     }
 
-    public User get(int pos) {
-        return users.get(pos);
+    public User getByOrdinal(int ordinal) {
+        return users.get(ordinal);
     }
 
-    public User getUserById(int id) {
+    public User getById(int id) throws UserNotFoundException {
         Iterator<User> iter = users.iterator();
         while (iter.hasNext()) {
             User user = iter.next();
@@ -26,10 +27,10 @@ public class UsersContainer {
                 return user;
             }
         }
-        return null;
+        throw new UserNotFoundException();
     }
 
-    public User getUserByToken(String token) {
+    public User getByToken(String token) throws UserNotFoundException {
         Iterator<User> iter = users.iterator();
         while (iter.hasNext()) {
             User user = iter.next();
@@ -37,7 +38,7 @@ public class UsersContainer {
                 return user;
             }
         }
-        return null;
+        throw new UserNotFoundException();
     }
 
     public User registerUser(String name) {
@@ -56,7 +57,7 @@ public class UsersContainer {
         }
     }
 
-    public ArrayList<JSONObject> getSerializedUsers() {
+    public ArrayList<JSONObject> serialize() {
         ArrayList<JSONObject> users = new ArrayList<>();
         this.users.forEach(u -> {
             users.add(u.toJSON());

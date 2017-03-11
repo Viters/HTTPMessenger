@@ -1,14 +1,13 @@
 package messenger.controllers;
 
-import com.google.common.collect.ImmutableMap;
 import messenger.State;
+import messenger.exceptions.UserNotFoundException;
 import messenger.models.Message;
 import messenger.models.User;
 import org.json.JSONObject;
 import server.*;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 public class MessageController extends Controller {
     private static State state = (State) HTTPServer.getState();
@@ -21,17 +20,18 @@ public class MessageController extends Controller {
     }
 
     public static Response createNewMessage(Request request) {
-        String senderToken = request.body.get("apiToken");
-        String messageText = request.body.get("content");
-        int receiverId = Integer.parseInt(request.body.get("toUser"));
-        User sender = state.users.getUserByToken(senderToken);
-        User receiver = state.users.getUserById(receiverId);
+        try {
+            String senderToken = request.body.get("apiToken");
+            String messageText = request.body.get("content");
+            int receiverId = Integer.parseInt(request.body.get("toUser"));
+            User sender = state.users.getByToken(senderToken);
+            User receiver = state.users.getById(receiverId);
 
-        if (sender == null || receiver == null)
+            Message message = state.messages.saveMessage(messageText, sender, receiver);
+
+            return ResponseFactory.json(message.toJSON());
+        } catch (UserNotFoundException e) {
             return ResponseFactory.notFound();
-
-        Message message = state.messages.saveMessage(messageText, sender, receiver);
-
-        return ResponseFactory.json(message.toJSON());
+        }
     }
 }
