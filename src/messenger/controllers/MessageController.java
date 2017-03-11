@@ -30,19 +30,8 @@ public class MessageController extends Controller {
         if (sender == null || receiver == null)
             return ResponseFactory.notFound();
 
-        int lastId = 0;
-        if (state.messages.size() > 0) {
-            lastId = state.messages.get(state.messages.size() - 1).id;
-        }
-        Message message = new Message(lastId + 1, messageText, sender, receiver);
-        state.messages.add(message);
-        Map<String, String> responseData = ImmutableMap.of(
-                "id", message.id.toString(),
-                "content", message.content,
-                "fromUser", message.fromUser.id.toString(),
-                "date", message.createdAt.toString(),
-                "toUser", message.toUser.id.toString()
-        );
-        return ResponseFactory.json(responseData);
+        Message message = state.messages.saveMessage(messageText, sender, receiver);
+
+        return ResponseFactory.json(message.toJSON());
     }
 }

@@ -3,12 +3,30 @@ package messenger.models;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Stack;
 
 public class MessagesContainer {
-    private ArrayList<Message> messages;
+    private Stack<Message> messages;
 
     public MessagesContainer() {
-        messages = new ArrayList<>();
+        messages = new Stack<>();
+    }
+
+    public Message saveMessage(String messageText, User sender, User receiver) {
+        Message message = new Message(this.getNextValidMessageId(), messageText, sender, receiver);
+        messages.push(message);
+
+        return message;
+    }
+
+    private int getNextValidMessageId() {
+        if (messages.isEmpty()) {
+            return 0;
+        }
+        else {
+            return messages.peek().id + 1;
+        }
     }
 
     public ArrayList<JSONObject> getSerializedMessagesForUser(String userToken, int lastId) {
