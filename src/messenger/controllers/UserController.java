@@ -12,12 +12,12 @@ import java.util.Map;
 public class UserController extends Controller {
     private static State state = (State) HTTPServer.getState();
 
-    static Response fetchNewUsers(Request request) {
+    public static Response fetchNewUsers(Request request) {
         ArrayList<JSONObject> users = state.users.getSerializedUsers();
         return ResponseFactory.json(users);
     }
 
-    static Response registerNewUser(Request request) {
+    public static Response registerNewUser(Request request) {
         String name = request.body.get("name");
 
         User user = state.users.registerUser(name);

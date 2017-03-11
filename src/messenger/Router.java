@@ -1,5 +1,7 @@
 package messenger;
 
+import messenger.controllers.MessageController;
+import messenger.controllers.UserController;
 import server.*;
 
 public class Router extends server.Router {
@@ -9,9 +11,9 @@ public class Router extends server.Router {
             case "/":
                 return ResponseFactory.ok().appendBodyAndReturnSelf("<h1>Hello!</h1>");
             case "/messages":
-                return MessengerController.fetchNewMessagesForUser(request);
+                return MessageController.fetchNewMessagesForUser(request);
             case "/users":
-                return MessengerController.fetchNewUsers(request);
+                return UserController.fetchNewUsers(request);
             default:
                 return ResponseFactory.notFound();
         }
@@ -21,9 +23,9 @@ public class Router extends server.Router {
     public Response postRoute(Request request) {
         switch(request.target) {
             case "/user":
-                return MessengerController.registerNewUser(request);
+                return UserController.registerNewUser(request);
             case "/message":
-                return MessengerController.createNewMessage(request);
+                return MessageController.createNewMessage(request);
             default:
                 return ResponseFactory.notFound();
         }

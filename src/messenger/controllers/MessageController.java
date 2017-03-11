@@ -13,14 +13,14 @@ import java.util.Map;
 public class MessageController extends Controller {
     private static State state = (State) HTTPServer.getState();
 
-    static Response fetchNewMessagesForUser(Request request) {
+    public static Response fetchNewMessagesForUser(Request request) {
         String userToken = request.body.get("apiToken");
         int id = Integer.parseInt(request.body.get("id"));
         ArrayList<JSONObject> messages = state.messages.getSerializedMessagesForUser(userToken, id);
         return ResponseFactory.json(messages);
     }
 
-    static Response createNewMessage(Request request) {
+    public static Response createNewMessage(Request request) {
         String senderToken = request.body.get("apiToken");
         String messageText = request.body.get("content");
         int receiverId = Integer.parseInt(request.body.get("toUser"));
