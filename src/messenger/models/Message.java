@@ -4,21 +4,20 @@ import com.google.common.collect.ImmutableMap;
 import org.json.JSONObject;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 public class Message {
     public Integer id;
     public String content;
-    public User fromUser;
-    public User toUser;
+    public User sender;
+    public User receiver;
     public Date createdAt;
 
-    public Message(Integer id, String content, User fromUser, User toUser) {
+    public Message(Integer id, String content, User sender, User receiver) {
         this.id = id;
         this.content = content;
-        this.fromUser = fromUser;
-        this.toUser = toUser;
+        this.sender = sender;
+        this.receiver = receiver;
         this.createdAt = new Date();
     }
 
@@ -26,8 +25,8 @@ public class Message {
         Map<String, String> data = ImmutableMap.of(
                 "id", id.toString(),
                 "content", content,
-                "fromUser", fromUser.id.toString(),
-                "toUser", toUser.id.toString(),
+                "sender", sender.id.toString(),
+                "receiver", receiver.id.toString(),
                 "date", createdAt.toString()
         );
         return new JSONObject(data);

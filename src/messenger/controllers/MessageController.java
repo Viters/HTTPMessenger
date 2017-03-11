@@ -23,7 +23,7 @@ public class MessageController extends Controller {
         try {
             String senderToken = request.body.get("apiToken");
             String messageText = request.body.get("content");
-            int receiverId = Integer.parseInt(request.body.get("toUser"));
+            int receiverId = Integer.parseInt(request.body.get("receiverId"));
             User sender = state.users.getByToken(senderToken);
             User receiver = state.users.getById(receiverId);
 
