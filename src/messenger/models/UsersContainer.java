@@ -3,35 +3,23 @@ package messenger.models;
 import messenger.exceptions.UserNotFoundException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Stack;
+import java.util.*;
 
 public class UsersContainer {
-    private Stack<User> users;
+    private HashMap<Integer, User> users;
+    private int nextAvailableId = 0;
 
     public UsersContainer() {
-        users = new Stack<>();
-    }
-
-    public User getByOrdinal(int ordinal) {
-        return users.get(ordinal);
+        users = new HashMap<>();
     }
 
     public User getById(int id) throws UserNotFoundException {
-        Iterator<User> iter = users.iterator();
-        while (iter.hasNext()) {
-            User user = iter.next();
-            if (user.id == id) {
-                return user;
-            }
-        }
+        users.get(id);
         throw new UserNotFoundException();
     }
 
     public User getByToken(String token) throws UserNotFoundException {
-        Iterator<User> iter = users.iterator();
+        Iterator<User> iter = users.values().iterator();
         while (iter.hasNext()) {
             User user = iter.next();
             if (user.token.equals(token)) {
@@ -41,25 +29,17 @@ public class UsersContainer {
         throw new UserNotFoundException();
     }
 
-    public User registerUser(String name) {
-        User user = new User(this.getNextValidUserId(), name, new Date());
-        users.push(user);
+    public User register(String name) {
+        User user = new User(nextAvailableId, name, new Date());
+        users.put(nextAvailableId, user);
 
+        nextAvailableId++;
         return user;
-    }
-
-    private int getNextValidUserId() {
-        if (users.isEmpty()) {
-            return 0;
-        }
-        else {
-            return users.peek().id + 1;
-        }
     }
 
     public ArrayList<JSONObject> serialize() {
         ArrayList<JSONObject> users = new ArrayList<>();
-        this.users.forEach(u -> {
+        this.users.values().forEach(u -> {
             users.add(u.toJSON());
         });
         return users;

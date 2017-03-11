@@ -20,7 +20,7 @@ public class UserController extends Controller {
     public static Response registerNewUser(Request request) {
         String name = request.body.get("name");
 
-        User user = state.users.registerUser(name);
+        User user = state.users.register(name);
 
         Map<String, String> responseData = ImmutableMap.of(
                 "id", user.id.toString(),
