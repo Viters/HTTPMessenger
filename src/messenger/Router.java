@@ -9,7 +9,7 @@ public class Router extends server.Router {
     public Response getRoute(Request request) {
         switch(request.target) {
             case "/":
-                return ResponseFactory.ok().appendBodyAndReturnSelf("<h1>Hello!</h1>");
+                return ResponseFactory.ok();
             case "/messages":
                 return MessageController.fetchNewMessagesForUser(request);
             case "/users":
