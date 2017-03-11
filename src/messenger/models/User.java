@@ -1,10 +1,12 @@
 package messenger.models;
 
+import com.google.common.collect.ImmutableMap;
 import messenger.helpers.TokenGenerator;
 import org.json.JSONObject;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 public class User {
     public Integer id;
@@ -27,9 +29,11 @@ public class User {
     }
 
     public JSONObject toJSON() {
-        HashMap<String, String> data = new HashMap<>();
-        data.put("id", id.toString());
-        data.put("name", name);
+        Map<String, String> data = ImmutableMap.of(
+                "id", id.toString(),
+                "name", name,
+                "token", token
+        );
         return new JSONObject(data);
     }
 }

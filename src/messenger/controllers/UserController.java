@@ -1,32 +1,25 @@
 package messenger.controllers;
 
-import com.google.common.collect.ImmutableMap;
 import messenger.State;
 import messenger.models.User;
 import org.json.JSONObject;
 import server.*;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 public class UserController extends Controller {
     private static State state = (State) HTTPServer.getState();
 
-    public static Response fetchNewUsers(Request request) {
+    public static Response fetchNewUsers() {
         ArrayList<JSONObject> users = state.users.serialize();
+
         return ResponseFactory.json(users);
     }
 
     public static Response registerNewUser(Request request) {
         String name = request.body.get("name");
-
         User user = state.users.register(name);
 
-        Map<String, String> responseData = ImmutableMap.of(
-                "id", user.id.toString(),
-                "name", user.name,
-                "token", user.token
-        );
-        return ResponseFactory.json(responseData);
+        return ResponseFactory.json(user.toJSON());
     }
 }
