@@ -2,7 +2,7 @@ package messenger;
 
 import server.*;
 
-public class MessengerRouter extends Router {
+public class Router extends server.Router {
     @Override
     public Response getRoute(Request request) {
         switch(request.target) {
