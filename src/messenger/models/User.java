@@ -10,13 +10,20 @@ public class User {
     public Integer id;
     public String name;
     public String token;
-    public Date registerDate;
+    public Date createdAt;
 
-    public User(Integer id, String name, Date registerDate) {
+    public User(Integer id, String name) {
         this.id = id;
         this.name = name;
         this.token = TokenGenerator.nextToken();
-        this.registerDate = registerDate;
+        this.createdAt = new Date();
+    }
+
+    public User(Integer id, String name, Date createdAt) {
+        this.id = id;
+        this.name = name;
+        this.token = TokenGenerator.nextToken();
+        this.createdAt = createdAt;
     }
 
     public JSONObject toJSON() {

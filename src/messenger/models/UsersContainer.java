@@ -7,10 +7,11 @@ import java.util.*;
 
 public class UsersContainer {
     private HashMap<Integer, User> users;
-    private int nextAvailableId = 0;
+    private int nextAvailableId;
 
     public UsersContainer() {
         users = new HashMap<>();
+        nextAvailableId = 0;
     }
 
     public User getById(int id) throws UserNotFoundException {
