@@ -2,6 +2,7 @@ package server;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import server.interfaces.JSONSerializable;
 
 import java.util.List;
 import java.util.Map;
@@ -51,6 +52,11 @@ public class ResponseFactory {
     public static Response json(JSONObject body) {
         return createResponseWithJSONHeaders()
                 .appendBodyAndReturnSelf(body.toString());
+    }
+
+    public static Response json(JSONSerializable body) {
+        return createResponseWithJSONHeaders()
+                .appendBodyAndReturnSelf(body.toJSON().toString());
     }
 
     private static Response createResponseWithJSONHeaders() {
