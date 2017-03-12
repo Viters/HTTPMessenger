@@ -13,7 +13,7 @@ public class Router extends server.Router {
             case "/messages":
                 return MessageController.fetchNewMessagesForUser(request);
             case "/users":
-                return UserController.fetchNewUsers();
+                return UserController.fetchUsers();
             default:
                 return ResponseFactory.notFound();
         }
@@ -23,7 +23,7 @@ public class Router extends server.Router {
     public Response postRoute(Request request) {
         switch(request.target) {
             case "/user":
-                return UserController.registerNewUser(request);
+                return UserController.registerUser(request);
             case "/message":
                 return MessageController.receiveMessage(request);
             default:

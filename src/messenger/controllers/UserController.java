@@ -10,13 +10,13 @@ import java.util.ArrayList;
 public class UserController extends Controller {
     private static State state = (State) HTTPServer.getState();
 
-    public static Response fetchNewUsers() {
+    public static Response fetchUsers() {
         ArrayList<JSONObject> users = state.users.serialize();
 
         return ResponseFactory.json(users);
     }
 
-    public static Response registerNewUser(Request request) {
+    public static Response registerUser(Request request) {
         String name = request.body.get("name");
         User user = state.users.register(name);
 
