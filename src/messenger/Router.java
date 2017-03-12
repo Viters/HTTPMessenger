@@ -25,7 +25,7 @@ public class Router extends server.Router {
             case "/user":
                 return UserController.registerNewUser(request);
             case "/message":
-                return MessageController.createNewMessage(request);
+                return MessageController.receiveMessage(request);
             default:
                 return ResponseFactory.notFound();
         }
