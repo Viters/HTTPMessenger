@@ -2,11 +2,12 @@ package messenger.models;
 
 import com.google.common.collect.ImmutableMap;
 import org.json.JSONObject;
+import server.interfaces.JSONSerializable;
 
 import java.util.Date;
 import java.util.Map;
 
-public class Message {
+public class Message implements JSONSerializable {
     public Integer id;
     public String content;
     public User sender;

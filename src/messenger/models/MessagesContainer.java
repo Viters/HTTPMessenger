@@ -1,8 +1,5 @@
 package messenger.models;
 
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MessagesContainer {
@@ -20,15 +17,5 @@ public class MessagesContainer {
 
         nextAvailableId++;
         return message;
-    }
-
-    public ArrayList<JSONObject> getSerializedMessagesForUser(String userToken, int lastId) {
-        ArrayList<JSONObject> messages = new ArrayList<>();
-        this.messages.values().forEach(m -> {
-            if (m.receiver.token.equals(userToken) && m.id > lastId) {
-                messages.add(m.toJSON());
-            }
-        });
-        return messages;
     }
 }
